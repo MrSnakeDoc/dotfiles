@@ -1,0 +1,19 @@
+#!/bin/zsh
+# zsh_env
+
+# Base paths
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+# Dotfiles structure
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+export ZSH_DIR="${ZSH_DIR:-$DOTFILES_DIR/zsh}"
+export ALIAS_FILE="${ALIAS_FILE:-$ZSH_DIR/zsh_aliases}"
+export HASH_FILE="${HASH_FILE:-$DOTFILES_DIR/.aliases_hash}"
+
+export GOTMPDIR=$HOME/.cache/go/tmp
+export GOCACHE=$HOME/.cache/go/build
+export GOMODCACHE=$HOME/.cache/go/mod
+# Editor
+export EDITOR="${EDITOR:-nvim}"

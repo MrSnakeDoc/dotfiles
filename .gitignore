@@ -1,0 +1,4 @@
+.aliases_hash
+**/*.zwc
+**/.zwc_last_build
+**/*.log

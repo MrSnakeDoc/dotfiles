@@ -1,0 +1,425 @@
+#!/bin/zsh
+# zsh_aliases
+
+# 📂 Navigation
+if_has eza && {
+  alias ls='eza -a --color=always --long --git --icons=auto --no-time --group-directories-first' || alias ls='ls --color=auto'
+  alias lsf='eza -a --color=always --long --git --icons=auto --group-directories-first --time-style=long-iso'
+  alias lsa='eza -al --color=always --long --git -m --time-style=iso --icons=auto --group-directories-first --total-size'
+  alias tree='eza --tree --git-ignore --icons=auto'
+}
+
+if_has zoxide && alias cd='z'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# 📄 Clipboard
+if_has clip && {
+  alias pbcopy="xsel --clipboard --input"
+  alias pbpaste="xsel --clipboard --output"
+}
+
+# 🔍 Recherche & Preview
+if_has fzf && if_has bat && alias fzf='fzf --preview "[[ -d {} ]] && eza --tree --level=2 {} || bat --color=always --style=header,grid --line-range=:500 {}"'
+
+# 📦 Grep + Cat
+if_has rg && alias grep='rg'
+if_has bat && {
+  alias cat='bat'
+  alias catp='bat -p --paging=never'
+}
+
+# 📑 Shell utils
+alias diff='diff --color=auto'
+alias ip='ip --color=auto'
+alias cls='clear'
+alias nzsh='nvim ~/.zshrc'
+alias src='source ~/.zshrc'
+
+# 🐹 Go
+if_has go && {
+  alias gmod='go mod'
+  alias gmodi='go mod init'
+  alias gmt='go mod tidy'
+  alias goev='go mod edit -go $(go version | awk "{print \$3}" | sed "s/^go//")'
+  alias glist='go list -m all'
+}
+
+# Nvim
+alias nviminstall='sudo dnf install neovim wl-clipboard tree-sitter-cli xsel gcc gcc-c++ make --setopt=install_weak_deps=False'
+alias nv='nvim'
+
+
+# Fedora Upgrade
+alias fedup='sudo dnf upgrade --refresh -y'
+alias feddl='sudo dnf system-upgrade download --releasever='
+feddlx() {
+  if [ -z "$1" ]; then 
+    echo "Usage: feddlx <releasever>" 
+    exit 1
+  fi
+  sudo dnf system-upgrade download --refresh --allowerasing --setopt=protected_packages= --releasever="$1" || { echo "Download for release $1 failed"; return 1; }
+  echo "Download succeeded — run 'sudo dnf system-upgrade reboot' to start the upgrade."
+}
+alias fednow='sudo dnf system-upgrade reboot'
+
+# ClaudeCode
+alias claudeinst='curl -fsSL https://claude.ai/install.sh | bash'
+
+# 🧪 Git
+if_has git && {
+  alias gb='git branch'
+  alias gbd='git branch -D'
+  alias ga='git add'
+  alias gac='git add . && git commit -m'
+  alias clone='git clone'
+  alias gs='git status'
+  alias gd='git diff'
+  alias gdc='git diff --cached'
+  alias gcb='git checkout -b'
+  alias gco='git checkout'
+  alias gbm='git branch -M main'
+  alias gr='git rebase'
+  alias gri='git rebase -i'
+  alias gp='git push'
+  alias gpf='git push --force-with-lease'
+  alias gpgt='git push gitea'
+  alias poule='git pull --ff-only'
+  alias poulet='git pull --rebase --autostash'
+  alias ghook="git config core.hooksPath .hooks"
+  alias geditor='git config --global core.editor nvim'
+  alias gl='git log --oneline --graph --decorate'
+  alias gcop='git checkout --orphan'
+  alias gtr='git ls-remote --tags origin'
+  alias gtl='git tag -l'
+  alias gprune='git config --global fetch.prune true'
+}
+
+# dotfiles update
+dpoule() {
+    pushd "$HOME/dotfiles" >/dev/null || return
+
+    poule
+    local exit_code=$?
+
+    popd >/dev/null || return
+    return $exit_code
+}
+
+if_has gh && {
+  alias ghr="gh run list --limit 5"
+  alias ghrv="gh run view --log"
+  alias ghrr="gh run rerun"
+  alias ghrw="gh run watch"
+  alias ghpr="gh pr list"
+  alias ghprv="gh pr view"
+  alias ghprc="gh pr create --fill"
+  alias ghprr="gh pr merge --rebase"
+  alias ghprs="gh pr merge --squash"
+}
+
+# 🐳 Docker
+if_has docker && {
+  alias d='docker'
+  alias dc='docker compose'
+  alias dcu='docker compose up -d'
+  alias dcd='docker compose down'
+  alias dcl='docker compose logs -f'
+  alias dcf='docker compose down && docker compose up -d && docker compose logs -f'
+  alias di='docker inspect -it'
+  alias drm='docker images --filter "dangling=true" -q --no-trunc | xargs -r docker rmi'
+  alias drv='docker volume ls -qf dangling=true | xargs -r docker volume rm'
+  alias lzd="docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock:ro --pull=always ghcr.io/mrjackwills/oxker"
+  alias rustscan='docker run -it --rm --name rustscan rustscan/rustscan:1.10.0'
+  alias scont="docker kill $(docker ps -q)"
+dips() {
+  help_dips() {
+    echo "Usage: dips [-i]"
+    echo
+    echo "Display Docker container names, networks, and IPs."
+    echo
+    echo "Options:"
+    echo "  -i        Sort by IP address (default: sort by container name)"
+    echo "  -h        Show this help message"
+  }
+
+  local sort_by_ip=false
+
+  case "$1" in
+    -h|--help)
+      help_dips
+      return 0
+      ;;
+    -i)
+      sort_by_ip=true
+      ;;
+    "")
+      ;;
+    *)
+      echo "Unknown option: $1"
+      help_dips
+      return 1
+      ;;
+  esac
+
+  if ! docker ps -q | grep -q .; then
+    echo "No running containers."
+    return 0
+  fi
+
+  docker inspect $(docker ps -q) |
+  jq -r '
+    sort_by(.Name)
+    | .[]
+    | .Name |= ltrimstr("/")
+    | .Name,
+      (
+        .NetworkSettings.Networks
+        | to_entries
+        | sort_by(.key)
+        | .[]
+        | "    \(.key) -> \(.value.IPAddress)"
+      ),
+      ""
+  '
+}
+
+  # --- Completion for dips ---
+  compdef _dips dips
+  _dips() {
+    _arguments \
+      '-i[sort by IP address]' \
+      '-h[show help]' \
+      '--help[show help]'
+  }
+
+  if_has fzf && {
+    dps() {
+      local cmd="docker ps"
+      [[ "$1" == "-a" ]] && cmd="docker ps -a"
+      local selection=$(eval "$cmd --format '{{.ID}}\t{{.Names}}\t{{.Status}}'" | fzf --no-preview)
+      local container_name=$(echo "$selection" | awk '{print $2}')
+      [[ -n "$container_name" ]] && echo "$container_name"
+    }
+
+    dip() {
+      local container="$1"
+      [[ -z "$container" ]] && container=$(docker ps --format '{{.Names}}' | fzf --no-preview)
+      [[ -n "$container" ]] && docker inspect "$container" | bat --style=grid | fzf --no-preview || echo "No container found or selected."
+    }
+  }
+}
+
+# ⚙️ Ansible
+if_has ansible && {
+  alias a="ansible"
+  alias apb="ansible-playbook"
+}
+
+# 🌱 Terraform
+if_has terraform && {
+  alias tf="terraform"
+  alias tfi="terraform init"
+  alias tfa="terraform apply"
+  alias tfp="terraform plan -out=./tfplan"
+}
+
+if_has zellij && {
+  alias zel='zellij'
+  alias zels='zellij -s'
+  alias zela='zellij attach'
+  alias zeld='zellij delete-session'
+  alias zeldf='zellij delete-session --force'
+  zelr() {
+    zellij delete-session home 2>/dev/null
+    zellij -s home -n code
+  }
+}
+
+# Herdr Multiplexer
+if_has herdr && {
+  alias h='herdr --no-session'
+}
+
+# 🔐 Yubikey
+if_has ykman && {
+  alias yk="ykman"
+  alias ykls="ykman fido credentials list"
+  alias ykrm="ykman fido credentials delete"
+}
+
+# Wifi
+if_has nmcli && {
+  alias nml='nmcli device wifi list'
+  alias nms='nmcli connection show'
+  alias nmu='nmcli connection up'
+  alias nmd='nmcli connection down'
+}
+
+# DNS
+if_has resolvectl && { 
+  alias fdns="sudo resolvectl flush-caches"
+}
+
+
+# Tls checker
+tlscheck() {
+  local host="$1"
+  local port="${2:-443}"
+
+  if [ -z "$host" ]; then
+    echo "Usage: tlscheck <hostname> [port]"
+    return 1
+  fi
+
+  openssl s_client \
+    -connect "${host}:${port}" \
+    -servername "${host}" \
+    -showcerts < /dev/null
+}
+
+
+# 🔑 SSH
+alias nconf="nvim ~/.ssh/config"
+alias keygen="ssh-keygen -t ed25519 -C"
+alias keyclean="ssh-keygen -R"
+
+# 🧷 Mice
+alias sys='tail -f /var/log/syslog'
+alias seckey="openssl rand -hex 32"
+alias df='df -h'
+alias duf='du -sh *'
+alias fds="find . -mindepth 2 -type f -delete && find . -mindepth 2 -type d -empty -delete"
+
+if_has yt-dlp && {
+  alias ytmp="yt-dlp -x --audio-format mp3 --audio-quality 0"
+  alias ytvid='yt-dlp -f "bestvideo+bestaudio" --merge-output-format'
+}
+
+cx() {
+    case "${1:-}" in
+        sol|terra|luna)
+            local model="gpt-5.6-$1"
+            shift
+            codex -m "$model" "$@"
+            ;;
+        *)
+            printf 'Usage: cx {sol|terra|luna} [codex arguments...]\n' >&2
+            return 1
+            ;;
+    esac
+}
+
+if_has rdap && {
+  rdaps() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rdaps <domain|ip|asn>" >&2
+        return 1
+    fi
+
+    rdap --json --log-level off "$1" | jq '
+        .[0] as $d |
+
+        def event($name):
+            ($d.events[]? | select(.eventAction == $name) | .eventDate) // null;
+
+        def registrar:
+            ($d.entities[]?
+                | select(.roles[]? == "registrar"));
+
+        def abuse:
+            (registrar.entities[]?
+                | select(.roles[]? == "abuse"));
+
+        def dnssec_algo($id):
+            {
+                "8":  "RSA/SHA-256",
+                "10": "RSA/SHA-512",
+                "13": "ECDSA P-256",
+                "14": "ECDSA P-384",
+                "15": "Ed25519",
+                "16": "Ed448"
+            }[$id|tostring] // "Unknown";
+
+        def digest_algo($id):
+            {
+                "1": "SHA-1",
+                "2": "SHA-256",
+                "4": "SHA-384"
+            }[$id|tostring] // "Unknown";
+
+        {
+            domain: ($d.ldhName | ascii_downcase),
+
+            handle: $d.handle,
+
+            status: ($d.status | sort),
+
+            dates: {
+                created: event("registration"),
+                changed: event("last changed"),
+                expires: event("expiration"),
+                rdap_updated: event("last update of RDAP database")
+            },
+
+            registrar: {
+                name:
+                    (registrar.vcardArray[1][1][3] // null),
+
+                iana:
+                    (
+                        registrar.publicIds[]
+                        | select(.type == "IANA Registrar ID")
+                        | .identifier
+                    ),
+
+                abuse: {
+                    email:
+                        (abuse.vcardArray[1][3][3] // null),
+
+                    phone:
+                        (
+                            abuse.vcardArray[1][2][3]
+                            | sub("^tel:"; "")
+                        ) // null
+                }
+            },
+
+            nameservers:
+                (
+                    [ $d.nameservers[].ldhName | ascii_downcase ]
+                    | sort
+                ),
+
+            dnssec: {
+                enabled:
+                    $d.secureDNS.delegationSigned,
+
+                zone_signed:
+                    ($d.secureDNS.zoneSigned // false),
+
+                ds:
+                    (
+                        ($d.secureDNS.dsData // [])
+                        | map({
+                            key_tag: .keyTag,
+                            algorithm: {
+                                id: .algorithm,
+                                name: dnssec_algo(.algorithm)
+                            },
+                            digest: {
+                                type: .digestType,
+                                name: digest_algo(.digestType),
+                                value: .digest
+                            }
+                        })
+                    )
+            }
+        }
+    '
+  }
+}
+
+# 🔍 help aliases
+if_has fzf && alias aliases='alias | sort | fzf --no-preview' || alias aliases='alias | sort | less -R'
