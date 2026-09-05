@@ -72,7 +72,7 @@ if_has git && {
   alias gb='git branch'
   alias gbd='git branch -D'
   alias ga='git add'
-  alias gac='git add . && git commit -m'
+  alias gac='git add . && git commit -s -m'
   alias clone='git clone'
   alias gs='git status'
   alias gd='git diff'
