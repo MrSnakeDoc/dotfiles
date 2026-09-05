@@ -75,6 +75,7 @@ if_has git && {
   alias gac='git add . && git commit -s -m'
   alias clone='git clone'
   alias gs='git status'
+  alias gus='git restore --staged .'
   alias gd='git diff'
   alias gdc='git diff --cached'
   alias gcb='git checkout -b'
