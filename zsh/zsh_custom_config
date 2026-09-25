@@ -1,0 +1,63 @@
+#!/bin/zsh
+#zsh_custom_config
+
+# Consolidated PATH management
+path_components=(
+    "$HOME/dotfiles/scripts"
+    "$HOME/.local/bin"
+    "/home/linuxbrew/.linuxbrew/bin/golangci-lint"
+    "/home/linuxbrew/.linuxbrew/opt/node@24/bin"
+    "$HOME/go/bin/"
+)
+
+compdir=$HOME/.zsh/completion
+
+# Clean and deduplicate PATH
+typeset -U PATH path
+for component in "${path_components[@]}"; do
+    if_dir "$component" && {
+        path+=("$component")
+    }
+done
+
+# enable syntax highlighting
+fpath=($compdir $fpath)
+if [[ -z "$_COMPINIT_DONE" ]]; then
+  _COMPINIT_DONE=1
+  autoload -Uz compinit
+  
+  # Only regenerate compdump once a day
+  if [[ -n ~/.cache/zcompdump(#qN.mh+24) ]]; then
+    compinit -C -d ~/.cache/zcompdump
+  else
+    compinit -i -d ~/.cache/zcompdump
+  fi
+  
+  [[ ! -f ~/.cache/zcompdump.zwc || ~/.cache/zcompdump -nt ~/.cache/zcompdump.zwc ]] && zcompile ~/.cache/zcompdump
+fi
+
+# Load atuin
+if [[ -n $PS1 ]]; then
+  if_has atuin && eval "$(atuin init zsh)"
+fi
+
+# enable zoxide
+if if_has zoxide; then
+  __zoxide_lazy() {
+    eval "$(zoxide init zsh)"
+    unset -f __zoxide_lazy
+  }
+  chpwd_functions+=(__zoxide_lazy)
+fi
+
+# enable command-not-found if installed
+if_file /etc/zsh_command_not_found && . /etc/zsh_command_not_found
+
+# enable starship prompt if installed
+if if_has starship; then
+  starship_precmd() {
+    eval "$(starship init zsh)"
+    unset -f starship_precmd
+  }
+  precmd_functions+=(starship_precmd)
+fi
