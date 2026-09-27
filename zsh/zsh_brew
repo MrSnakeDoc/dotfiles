@@ -1,0 +1,11 @@
+#!/bin/zsh
+# zsh_brew
+
+# Load linuxbrew
+if_file "/home/linuxbrew/.linuxbrew/bin/brew" && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+if_has brew && {
+  export BREW_PREFIX="${BREW_PREFIX:-$(brew --prefix)}"
+  export ZA_PATH=${ZA_PATH:-$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh}
+  export ZSHI_PATH=${ZSHI_PATH:-$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh}
+}

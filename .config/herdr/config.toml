@@ -1,0 +1,12 @@
+onboarding = false
+
+[terminal]
+default_shell = "zsh"
+new_cwd = "current"
+
+[ui]
+pane_borders = true
+pane_gaps = false
+sidebar_start_collapsed = true
+sidebar_collapsed_mode = "hidden"
+# host_cursor = "drawn"

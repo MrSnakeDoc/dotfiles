@@ -1,0 +1,18 @@
+layout {
+    pane split_direction="vertical" {
+        // Colonne gauche
+        pane size="75%" split_direction="horizontal" {
+            // Principal
+            pane size="80%"
+
+            // Bottom 20%
+            pane size="20%" split_direction="vertical" {
+                pane
+                pane
+            }
+        }
+
+        // Droite
+        pane size="25%"
+    }
+}
