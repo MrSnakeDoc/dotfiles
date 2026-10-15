@@ -1,0 +1,17 @@
+#!/bin/zsh
+# zsh_brew
+
+# Load linuxbrew
+if_file "/home/linuxbrew/.linuxbrew/bin/brew" && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+DISTRO_ZA_PATH="/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+if if_has brew; then
+  export BREW_PREFIX="${BREW_PREFIX:-$(brew --prefix)}"
+  export ZA_PATH="${ZA_PATH:-$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh}"
+  export ZSHI_PATH="${ZSHI_PATH:-$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh}"
+elif if_file "$DISTRO_ZA_PATH"; then
+  # Debian/Ubuntu fallback
+  export ZA_PATH="${ZA_PATH:-/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh}"
+  export ZSHI_PATH="${ZSHI_PATH:-/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh}"
+fi
