@@ -6,6 +6,7 @@ packages:
     - command: eza
     - command: fd
     - command: fzf
+    - command: neovim
     - command: rdap
       binary: icann-rdap
     - command: rg
@@ -13,6 +14,7 @@ packages:
     - command: starship
     - command: tldr
       binary: tlrc
+    - command: zellij
     - command: zoxide
     - command: zsh-autosuggestions
     - command: zsh-syntax-highlighting
@@ -34,13 +36,11 @@ packages:
       optional: true
     - command: govulncheck
       optional: true
-    - command: herdr
-      optional: true
     - command: hugo
       optional: true
-    - command: minio-mc
+    - command: just
       optional: true
-    - command: neovim
+    - command: minio-mc
       optional: true
     - command: node@24
       optional: true
@@ -50,5 +50,5 @@ packages:
       optional: true
     - command: ykman
       optional: true
-    - command: zellij
+    - command: yt-dlp
       optional: true
