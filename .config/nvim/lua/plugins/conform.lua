@@ -2,6 +2,17 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      formatters = {
+        prettier = {
+          args = {
+            "--stdin-filepath",
+            "$FILENAME",
+            "--ignore-path",
+            ".prettierignore",
+          },
+        },
+      },
+
       formatters_by_ft = {
         go = {
           "goimports",
