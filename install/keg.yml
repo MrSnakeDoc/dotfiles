@@ -1,0 +1,54 @@
+packages:
+    - command: atuin
+    - command: bat
+    - command: btop
+    - command: curlie
+    - command: eza
+    - command: fd
+    - command: fzf
+    - command: neovim
+    - command: rdap
+      binary: icann-rdap
+    - command: rg
+      binary: ripgrep
+    - command: starship
+    - command: tldr
+      binary: tlrc
+    - command: zellij
+    - command: zoxide
+    - command: zsh-autosuggestions
+    - command: zsh-syntax-highlighting
+    - command: ansible
+      optional: true
+    - command: croc
+      optional: true
+    - command: dart-sass
+      optional: true
+    - command: gh
+      optional: true
+    - command: go
+      optional: true
+    - command: gofumpt
+      optional: true
+    - command: goimports
+      optional: true
+    - command: golangci-lint
+      optional: true
+    - command: govulncheck
+      optional: true
+    - command: hugo
+      optional: true
+    - command: just
+      optional: true
+    - command: minio-mc
+      optional: true
+    - command: node@24
+      optional: true
+    - command: yaml-language-server
+      optional: true
+    - command: yamllint
+      optional: true
+    - command: ykman
+      optional: true
+    - command: yt-dlp
+      optional: true

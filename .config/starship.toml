@@ -1,0 +1,147 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+# Change command timeout from 500 to 1000 ms
+command_timeout = 1000
+
+# Change the default prompt format
+format = """\
+[╭╴](238)$os\
+$all[╰─](238)$character"""
+
+[os]
+format = '[$symbol](bold white)'
+disabled = false
+
+[os.symbols]
+Pop = " "
+Ubuntu = " "
+Manjaro = " "
+Kali = " "
+Arch = "󰣇"
+Linux = "󰌽 "
+Raspbian = "󰐿 "
+Mint = "󰣭 "
+SUSE = " "
+Gentoo = "󰣨 "
+Fedora = "󰣛 "
+Alpine = " "
+Artix = "󰣇 "
+CentOS = " "
+Debian = "󰣚 "
+Redhat = "󱄛 "
+RedHatEnterprise = "󱄛 "
+Windows = "󰍲 "
+Macos = "󰀵 "
+
+# ssh format
+[hostname]
+ssh_only = true
+format = "on 🌐 [$hostname](bold yellow) [$env](bold blue)"
+style = "bold green"
+
+# Change the default prompt characters
+[character]
+success_symbol = "[󰁔](238)"
+error_symbol = "[󰁔](238)"
+
+# Shows the username
+[username]
+style_user = "white bold"
+style_root = "black bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[directory]
+truncation_length = 2
+truncation_symbol = "…/"
+home_symbol = "󰋜 ~"
+read_only_style = "197"
+read_only = "  "
+format = "at [$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = " "
+format = "on [${symbol}$branch]($style) "
+truncation_length = 4
+truncation_symbol = "…/"
+style = "bold green"
+
+[git_status]
+format = '[\($all_status$ahead_behind\)]($style) '
+style = "bold green"
+conflicted = "🏳"
+up_to_date = " "
+untracked = " "
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+stashed = " "
+modified = " "
+staged = '[++\($count\)](green)'
+renamed = "󱍸 "
+deleted = " "
+
+[terraform]
+format = "via [${symbol} terraform $version]($style) 󰑃 [$workspace]($style) "
+
+[vagrant]
+format = "via [${symbol} vagrant $version]($style) "
+
+[docker_context]
+format = "via [${symbol} $context](bold blue) "
+
+[helm]
+format = "via [${symbol} $version](bold purple) "
+
+[python]
+# symbol = " "
+# python_binary = "python3"
+format = 'via [${symbol} ${version}](bold yellow)  $virtualenv'
+
+[nodejs]
+# format = "via [ $version](bold green) "
+format = "via [${symbol} $version](bold green)"
+disabled = false
+
+[rust]
+format = "via [${symbol} $version](red bold)"
+
+[ruby]
+format = "via [${symbol} $version]($style) "
+
+[kotlin]
+# Uses the Kotlin Compiler binary to get the installed version
+kotlin_binary = "kotlinc"
+
+[kubernetes]
+format = 'on [${symbol} $context\($namespace\)](bold purple) '
+disabled = false
+
+[aws]
+disabled = false
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+style = "bold blue"
+symbol = "🅰 "
+
+[azure]
+disabled = false
+format = "on [$symbol($subscription)]($style) "
+symbol = "ﴃ "
+style = "blue bold"
+
+[container]
+format = "[${symbol} \\[$name\\]]($style) "
+
+[sudo]
+style = "bold green"
+symbol = "💀 "
+disabled = false
+
+[dotnet]
+disabled = true
+

@@ -1,0 +1,4 @@
+[archive]
+source = '~/.ssh/'
+include = ['keys/**', 'pub/**', 'config']
+output = '~/ssh_backup/'
