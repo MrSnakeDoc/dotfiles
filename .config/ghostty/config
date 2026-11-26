@@ -1,0 +1,66 @@
+# Split navigation
+keybind = alt+h=goto_split:left
+keybind = alt+j=goto_split:down
+keybind = alt+k=goto_split:up
+keybind = alt+l=goto_split:right
+
+
+# Split Cycling
+keybind = alt+n=goto_split:next
+keybind = alt+p=goto_split:previous
+
+# Split creation
+keybind = alt+d=new_split:down
+keybind = alt+r=new_split:right
+keybind = alt+u=new_split:up
+
+# Split management
+keybind = alt+e=equalize_splits
+keybind = alt+c=close_surface
+
+# Split resizing
+keybind = alt+arrow_left=resize_split:left,20
+keybind = alt+arrow_right=resize_split:right,20
+keybind = alt+arrow_up=resize_split:up,20
+keybind = alt+arrow_down=resize_split:down,20
+
+# Hide the GTK title bar
+window-decoration = none
+
+# Dark Lavender - Custom Ghostty theme
+
+# Background and foreground
+background = #010109
+foreground = #D9E0EE
+
+# Cursor
+cursor-color = #40C4FF
+cursor-text = #010109
+
+# Selection
+selection-background = #2A2E44
+selection-foreground = #FFFFFF
+
+# Window
+background-opacity = 1
+background-blur = false
+
+# Standard ANSI colors
+palette = 0=#010109
+palette = 1=#FF5252
+palette = 2=#76FF03
+palette = 3=#FFFF07
+palette = 4=#40C4FF
+palette = 5=#7C4DFF
+palette = 6=#64FFDA
+palette = 7=#D9E0EE
+
+# Bright ANSI colors
+palette = 8=#6B7089
+palette = 9=#FF4081
+palette = 10=#B2FF59
+palette = 11=#FFFF8D
+palette = 12=#82DFFF
+palette = 13=#B388FF
+palette = 14=#A7FFEB
+palette = 15=#FFFFFF

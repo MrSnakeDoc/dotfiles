@@ -85,6 +85,7 @@ declare -A LINKS=(
   ["$DOTFILES/.config/nvim"]="$CONFIG/nvim"
   ["$DOTFILES/.config/zellij"]="$CONFIG/zellij"
   ["$DOTFILES/.config/hck"]="$CONFIG/hck"
+  ["$DOTFILES/.config/ghostty"]="$CONFIG/ghostty"
 )
 
 # ==================================================
